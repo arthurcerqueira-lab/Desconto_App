@@ -1,14 +1,24 @@
-from src.app.entities.pedido import Pedido
-from Desconto_App.src.app.services.pedido_service import PedidoService
+from src.app.use_cases.criar_pedido import CriarPedido
+from src.app.dtos.criar_pedido_input_dto import CriarPedidoInputDTO
+from src.app.presenters.pedido_presenter import PedidoPresenter
 
 class PedidoController:
-    """Classe de controlador para gerenciar a lógica de negócios dos pedidos."""
+    def __init__(self, criar_pedido_use_case: CriarPedido, presenter: PedidoPresenter):
+        self.criar_pedido_use_case = criar_pedido_use_case
+        self.self.presenter = presenter
 
-    def __init__(self, service: PedidoService):
-        self.service = service
+    def criar_pedido(self, cliente: str, valor_original: float, tipo_desconto: str):
+        input_dto = CriarPedidoInputDTO(
+            cliente=cliente,
+            valor_original=valor_original,
+            tipo_desconto=tipo_desconto
+        )
 
-    def adicionar_pedido(self, pedido: Pedido):
-        self.service.adicionar_pedido(pedido)
+        output_dto = self.criar_pedido_use_case.executar(input_dto)
 
-    def processar_pedidos(self):
-        self.service.processar_pedidos()
+        return self.presenter.apresentar(output_dto)
+
+    def listar_pedidos(self):
+        output_dtos = self.criar_pedido_use_case.listar_pedidos()
+
+        return self.presenter.apresentar_lista(output_dtos)
