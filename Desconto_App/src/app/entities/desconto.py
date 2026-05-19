@@ -16,3 +16,4 @@ class DescontoVIP(IDesconto):
 class DescontoPremium(IDesconto):
     def calcular(self, valor: float) -> float:
         return valor * 0.3
+
